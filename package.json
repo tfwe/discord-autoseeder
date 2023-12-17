@@ -1,0 +1,25 @@
+{
+  "name": "discord-bot-template",
+  "version": "1.0.0",
+  "description": "A template for a Discord.js bot",
+  "main": "bot.js",
+  "scripts": {
+    "test": "node bot.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tfwe/Discord-Bot-Template.git"
+  },
+  "author": "tfw_e",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tfwe/Discord-Bot-Template/issues"
+  },
+  "homepage": "https://github.com/tfwe/Discord-Bot-Template#readme",
+  "dependencies": {
+    "discord.js": "^14.13.0",
+    "dotenv": "^16.3.1",
+    "pino": "^8.15.1",
+    "pino-pretty": "^10.2.0"
+  }
+}
