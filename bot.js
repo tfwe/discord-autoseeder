@@ -10,11 +10,8 @@ const TOKEN = process.env.TOKEN
 //JSON.stringify complains when running into a BigInt for some reason, this happens when JSON.toString() is called on interaction object
 BigInt.prototype.toJSON = function() { return this.toString() }
 const client = new Client({ intents: [
-
   GatewayIntentBits.Guilds,
   GatewayIntentBits.GuildMessages,
-  GatewayIntentBits.MessageContent,
-  GatewayIntentBits.GuildMembers,
 ] });
 
 client.commands = new Collection();
