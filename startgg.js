@@ -3,38 +3,46 @@ const logger = require('./logger');
 const url = 'https://api.start.gg/gql/alpha';
 const STARTGG_TOKEN = process.env.STARTGG_TOKEN
 
-async function fetchLeagueEvents(slug, page=1, perPage=15) {
- `query LeagueEvents {
-  league(slug: "clash-at-carleton-fall-2023-smash-ultimate-singles") {
+async function fetchSetData(id) {
+  const query = `
+query SetData {
+  set(id: ${id}) {
     id
-    name
-    events(query: {page: 1, perPage: 15}) {
+    state
+    round
+    displayScore
+    winnerId
+    event {
       id
-      nodes {
-        sets(filters: {isEventOnline: false}) {
-          nodes {
-            id
-          }
-        }
+      name
+      tournament {
+        id
+        name
+      }
+    }
+    slots {
+      entrant {
+        id
+        name
       }
     }
   }
-}` 
+}`
   const result = await queryStartGG(query)
-  return result.data.league.events
+  return result.data.set
 }
 
-async function fetchPlayerSets(id, page=1, perPage=10) {
+async function fetchPlayerData(id, page=1, perPage=15) {
   const query = `
 query Sets {
   player(id: ${id}) {
     id
+    prefix
+    gamerTag
     sets(perPage: ${perPage}, page: ${page}) {
       nodes {
         id
         displayScore
-        pageInfo
-        totalPages
         event {
           id
           name
@@ -46,9 +54,33 @@ query Sets {
       }
     }
   }
+}
+`
+  const result = await queryStartGG(query)
+  logger.info(result)
+  return result.data.player
+}
+
+async function fetchLeagueEvents(slug, page=1, perPage=15, allowOnline=false) {
+  const query = `
+query LeagueEvents {
+  league(slug: "clash-at-carleton-fall-2023-smash-ultimate-singles") {
+    id
+    name
+    events(query: {page: ${page}, perPage: ${perPage}}) {
+      nodes {
+        id
+        sets(filters: {isEventOnline: ${allowOnline}, state: 3}) {
+          nodes {
+            id
+          }
+        }
+      }
+    }
+  }
 }`
   const result = await queryStartGG(query)
-  return result.data.player.sets
+  return result.data.league.events
 }
 
 async function fetchLeagueStandings(slug, page=1, perPage=10) {
@@ -81,7 +113,6 @@ query LeagueStandings {
   }
 }`;
   const result = await queryStartGG(query)
-  logger.info(result.data.league.standings)
   return result.data.league.standings
 };
 
@@ -102,4 +133,9 @@ async function queryStartGG(query) {
   }
 }
 
-module.exports = { fetchLeagueStandings, fetchPlayerSets };
+module.exports = { 
+  fetchLeagueStandings, 
+  fetchLeagueEvents, 
+  fetchSetData, 
+  fetchPlayerData 
+};
