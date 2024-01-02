@@ -8,25 +8,28 @@ module.exports = {
     .addSubcommand(subcommand =>
       subcommand
         .setName('players')
-        .setDescription('Fetches players from the league'))
+        .setDescription('Fetches players from the league')
+    )
     .addSubcommand(subcommand =>
       subcommand
         .setName('sets')
-        .setDescription('Fetches sets from the league')),
+        .setDescription('Fetches sets from the league')
+    ),
   async execute(interaction) {
     const nextPageButton = new ButtonBuilder()
-			.setCustomId('next')
-			.setLabel('Next Page')			
-      .setStyle(ButtonStyle.Secondary);
+            .setCustomId('next')
+            .setLabel('Next Page')            
+            .setStyle(ButtonStyle.Secondary);
 
-		const prevPageButton = new ButtonBuilder()
-			.setCustomId('prev')
-			.setLabel('Previous Page')			
-      .setStyle(ButtonStyle.Secondary);
+    const prevPageButton = new ButtonBuilder()
+            .setCustomId('prev')
+            .setLabel('Previous Page')            
+            .setStyle(ButtonStyle.Secondary);
+
     const row = new ActionRowBuilder()
-			.addComponents(nextPageButton, prevPageButton);
+            .addComponents(nextPageButton, prevPageButton);
 
-    const embed = new EmbedBuilder()
+    const embed = new EmbedBuilder();
 		if (interaction.options.getSubcommand() === 'players') {
       const standings = await fetchLeagueStandings('clash-at-carleton-fall-2023-smash-ultimate-singles', 1, 15)
       embed.setTitle("Clash at Carleton League Standings")

@@ -40,6 +40,11 @@ query Sets {
     prefix
     gamerTag
     sets(perPage: ${perPage}, page: ${page}) {
+      pageInfo {
+        page
+        total
+        totalPages
+      }
       nodes {
         id
         displayScore
@@ -68,6 +73,11 @@ query LeagueEvents {
     id
     name
     events(query: {page: ${page}, perPage: ${perPage}}) {
+      pageInfo {
+        page
+        total
+        totalPages
+      }
       nodes {
         id
         sets(filters: {isEventOnline: ${allowOnline}, state: 3}) {
@@ -80,6 +90,7 @@ query LeagueEvents {
   }
 }`
   const result = await queryStartGG(query)
+  logger.info(result)
   return result.data.league.events
 }
 
@@ -94,8 +105,9 @@ query LeagueStandings {
       perPage: ${perPage}
     }) {
       pageInfo {
-        totalPages
+        page
         total
+        totalPages
       }
       nodes {
         id

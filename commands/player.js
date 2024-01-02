@@ -8,15 +8,21 @@ module.exports = {
     .addStringOption(option => 
       option.setName('player')
       .setRequired(true)
-      .setDescription('Player ID')),
+      .setDescription('Player ID')
+    )
+    // .addIntegerOption(option => 
+    //   option.setName('Page Number')
+    //   .setDescription('Which page to query')
+    // )
+  ,
   async execute(interaction) {
     const nextPageButton = new ButtonBuilder()
-			.setCustomId('next')
+			.setCustomId('player-next-page')
 			.setLabel('Next Page')			
       .setStyle(ButtonStyle.Secondary);
 
 		const prevPageButton = new ButtonBuilder()
-			.setCustomId('prev')
+			.setCustomId('player-prev-page')
 			.setLabel('Previous Page')			
       .setStyle(ButtonStyle.Secondary);
     const row = new ActionRowBuilder()
@@ -26,6 +32,7 @@ module.exports = {
     const player = await fetchPlayerData(playerId)
     const embed = new EmbedBuilder()
       .setTitle(`${player.prefix} | ${player.gamerTag}`)
+      // .setFooter(`Page ${player.sets.page} / ${player.sets.totalPages} `)
     for (let node of player.sets.nodes) {
       if (!node.event.name.includes('Ultimate Singles') || node.event.name.includes('Ladder') || node.event.name.includes('Crew Battle')) {
         continue
